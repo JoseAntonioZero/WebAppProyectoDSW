@@ -2,9 +2,9 @@
 
 namespace WebAppProyectoDSW.Util
 {
-    public class Conexion
+    public class conexion
     {
-        SqlConnection cn = new SqlConnection(@"server = (local);database = Negocios2022;" +
+        SqlConnection cn = new SqlConnection(@"server = (local);database = Marketec2022;" +
                     "Trusted_Connection = True;" + "MultipleActiveResultSets = True;" +
                     "TrustServerCertificate = False;" + "Encrypt = False");
 

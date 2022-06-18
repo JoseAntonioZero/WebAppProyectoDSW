@@ -10,36 +10,54 @@ namespace WebAppProyectoDSW.Controllers
 {
     public class MarketecController : Controller
     {
-        //cadena = Carpeta Util > Conexion
+        string cadena = @"server = (local);database = Marketec2022;" +
+                    "Trusted_Connection = True;" + "MultipleActiveResultSets = True;" +
+                    "TrustServerCertificate = False;" + "Encrypt = False";
 
-
-        /*
-         public IEnumerable<Producto> listado()
+        public IEnumerable<Producto> listadoProducto()
         {
-            List<Producto> auxiliar = new List<Producto>();
-            using (SqlConnection cn = new conexionDAO().getcn)
+            List<Producto> temporal = new List<Producto>();
+            using (SqlConnection cn = new conexion().getcn)
             {
+                SqlCommand cmd = new SqlCommand("exec usp_listar_productos", cn);
                 cn.Open();
-                SqlCommand cmd = new SqlCommand("exec usp_productos_inventario", cn);
                 SqlDataReader dr = cmd.ExecuteReader();
+
                 while (dr.Read())
                 {
-                    auxiliar.Add(new Producto()
+                    temporal.Add(new Producto()
                     {
-                        idproducto = dr.GetInt32(0),
-                        descripcion = dr.GetString(1),
-                        categoria = dr.GetString(2),
-                        precio = dr.GetDecimal(3),
-                        unidades = dr.GetInt16(4) //smallint
+                        idProducto = dr.GetInt32(0),
+                        nombreProducto = dr.GetString(1),
+                        idProveedor = dr.GetInt32(2),
+                        idCategoria = dr.GetInt32(3),
+                        precioUnidad = dr.GetDecimal(4),
+                        stock = dr.GetInt16(5)
                     });
                 }
             }
-            return auxiliar;
+            return temporal;
         }
-         */
-        public IActionResult Index()
+
+        Producto Buscar(int codigo = 0)
         {
-            return View();
+            return listadoProducto().FirstOrDefault(c => c.idProducto == codigo);
         }
+
+        public IActionResult MenuPrincipal()
+        {
+            /*
+            //evaluo, si no existe Session carrito, definirlo como una lista de Pedido vacio
+            if (HttpContext.Session.GetString("carrito") == null)
+            {
+                HttpContext.Session.SetString("carrito",
+                    JsonConvert.SerializeObject(new List<Carrito>()));
+            }
+            */
+            //envio la lista de productos
+            return View(listadoProducto());
+        }
+
+
     }
 }

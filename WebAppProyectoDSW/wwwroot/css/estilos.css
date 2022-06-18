@@ -1,0 +1,146 @@
+﻿.contenedor {
+    width: 73%;
+    float: right;
+    margin-bottom: 60px;
+}
+
+.portal {
+    display: grid;
+    grid-template-columns:repeat(1,1fr); 
+    column-gap: 10px;
+    row-gap:10px;
+    background-color: white;
+}
+
+.registro {
+    border: 3px solid black;
+    border-radius: 7px;
+    min-height: 300px; /*300*/
+    height: auto;
+    margin: 1%;
+    padding: 20px;
+    background-color: darkcyan;
+    display: block;
+}
+
+.textreg {
+    width: 40%;
+    float: left;
+    margin-left: 20px;
+    font-size: 20px;
+    color: white;
+    font-family: "Arial";
+    letter-spacing:2px;
+}
+
+.imgreg {
+    width: 40%;
+    float: right;
+    text-align: center;
+}
+
+    .imgreg img {
+        width: 200px; /*100*/
+        height: 200px; /*100*/
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 20px;
+    }
+
+.deshabilita{
+    visibility:hidden;
+}
+
+h1 {
+    text-align: center;
+}
+
+/* NAV */
+.nav {
+    background-color: midnightblue;
+    display: block;
+    height: 140px;
+}
+
+    .nav .carimg {
+            width: 100px;
+            margin: 20px;
+            float: right;
+
+    }
+
+    .nav .logoimg {
+        height: 100px;
+        margin: 20px;
+        float: left;
+    }
+
+/* MENÚ de la izquierda*/
+
+.menuportal {
+    width: 25%;
+    height: auto;
+    display: block;
+    flex-direction: column;
+    float: left;
+    margin-right: 20px;
+    background-color: black;
+}
+
+    
+    .menuportal a {
+        color: white;
+        text-align: center;
+        letter-spacing: 2px;
+        text-decoration: none;
+        font: bold 16px "Verdana";
+        display: block;
+    }
+
+
+    .menuportal li {
+        background-color: black;
+        list-style: none;
+        border: 2px solid white;
+        border-radius: 7px;
+        margin: 10px;
+        padding: 10px;
+        text-align: center;
+    }
+/*
+.menuportal > li {
+    float: left;
+}
+
+.menuportal li a {
+    background-color: #000;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 12px;
+    display: block;
+}
+    */
+    .menuportal li a:hover {
+        background-color: #434343;
+    }
+        
+.menuportal li ul {
+    display: none;
+    position: absolute;
+}
+    
+.menuportal li:hover > ul {
+    display: block;
+}
+
+.menuportal li ul li {
+    position: relative;
+    margin: 0px;
+}
+
+    .nav li ul li ul {
+        right: -140px;
+        top: 0px;
+    }
+
+

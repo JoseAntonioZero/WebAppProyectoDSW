@@ -10,10 +10,6 @@ namespace WebAppProyectoDSW.Controllers
 {
     public class MarketecController : Controller
     {
-        string cadena = @"server = (local);database = Marketec2022;" +
-                    "Trusted_Connection = True;" + "MultipleActiveResultSets = True;" +
-                    "TrustServerCertificate = False;" + "Encrypt = False";
-
         public IEnumerable<Producto> listadoProducto()
         {
             List<Producto> temporal = new List<Producto>();

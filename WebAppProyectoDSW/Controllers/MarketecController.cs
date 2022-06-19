@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Session;
+using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using Microsoft.Data.SqlClient;
-using Microsoft.AspNetCore.Session;
 using Newtonsoft.Json;
 using WebAppProyectoDSW.Models;
 using WebAppProyectoDSW.Util;
@@ -10,6 +10,69 @@ namespace WebAppProyectoDSW.Controllers
 {
     public class MarketecController : Controller
     {
+        string logSession = ""; 
+
+        string verificar(string login, string clave)
+        {
+            string sw = "";
+            using (SqlConnection cn = new conexion().getcn)
+            {
+                cn.Open();
+
+                SqlCommand cmd = new SqlCommand("usp_verifica_acceso", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@correo", login);
+                cmd.Parameters.AddWithValue("@clave", clave);
+                cmd.Parameters.Add("@fullname", SqlDbType.VarChar, 150).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("@sw", SqlDbType.VarChar, 1).Direction = ParameterDirection.Output;              
+                cmd.ExecuteNonQuery();
+
+                sw = cmd.Parameters["@sw"].Value.ToString();
+                HttpContext.Session.SetString(logSession, cmd.Parameters["@fullname"].Value.ToString());
+            }
+            return sw;
+        }
+
+        public async Task<IActionResult> Login()
+        {
+            //inicializar el Session 
+            HttpContext.Session.SetString(logSession, "");
+
+            //envio un nuevo usuario
+            return View(await Task.Run(() => new Empleado()));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(Empleado reg)
+        {
+            //Valido si los datos en el formulario son correctos
+            if (!ModelState.IsValid) return View(await Task.Run(() => reg));
+
+            //Si se ingresaron datos correctos
+            string sw = verificar(reg.correo, reg.clave);
+            if (sw == "0") // -> 0 = no existe empleado con esos datos
+            {
+                ModelState.AddModelError("", HttpContext.Session.GetString(logSession));
+                return View(await Task.Run(() => reg));
+            }
+            else // -> 1 = Datos correctos
+            {
+                return RedirectToAction("MenuPrincipal");
+            }
+        }
+
+        public IActionResult Plataforma()
+        {
+            //enviar los datos del empleado
+            ViewBag.empleado = HttpContext.Session.GetString(logSession);
+            return View();
+        }
+
+
+
+
+
+        // Listado de productos PARA EL LOGIN
         public IEnumerable<Producto> listadoProducto()
         {
             List<Producto> temporal = new List<Producto>();
@@ -51,6 +114,8 @@ namespace WebAppProyectoDSW.Controllers
             }
             */
             //envio la lista de productos
+
+            //ViewBag.empleado = HttpContext.Session.GetString(logSession);
             return View(listadoProducto());
         }
 

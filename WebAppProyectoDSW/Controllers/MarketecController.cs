@@ -41,10 +41,10 @@ namespace WebAppProyectoDSW.Controllers
             HttpContext.Session.SetString(sesion, "");
 
             //envio un nuevo usuario
-            return View(await Task.Run(() => new Empleado()));
+            return View(await Task.Run(() => new Usuario()));
         }
 
-        [HttpPost]public async Task<IActionResult> Login(Empleado reg)
+        [HttpPost]public async Task<IActionResult> Login(Usuario reg)
         {
             //Valido si los datos en el formulario son correctos
             if (!ModelState.IsValid) return View(await Task.Run(() => reg));
@@ -58,7 +58,7 @@ namespace WebAppProyectoDSW.Controllers
             }
             else // -> 1 = Datos correctos
             {
-                return RedirectToAction("Login");
+                return RedirectToAction("MenuPrincipal");
             }
         }
 
@@ -105,7 +105,7 @@ namespace WebAppProyectoDSW.Controllers
             */
             //envio la lista de productos
 
-            //ViewBag.empleado = HttpContext.Session.GetString(sesion);
+            ViewBag.usuario = HttpContext.Session.GetString(sesion);
             return View(listadoProducto());
         }
 

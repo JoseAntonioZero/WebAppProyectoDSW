@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Session;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Session;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using Newtonsoft.Json;
@@ -10,15 +10,16 @@ namespace WebAppProyectoDSW.Controllers
 {
     public class MarketecController : Controller
     {
-        string sesion = ""; 
+        string sesion = "";
 
-        string verificar(string correo, string clave)
+        string verifica(string correo, string clave)
         {
             string sw = "";
             using (SqlConnection cn = new conexion().getcn)
             {
                 cn.Open();
 
+                //ejecutar el procedure usp_verifica_acceso, pasando sus parametros de entrada y salida
                 SqlCommand cmd = new SqlCommand("usp_verifica_acceso", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@correo", correo);
@@ -27,6 +28,7 @@ namespace WebAppProyectoDSW.Controllers
                 cmd.Parameters.Add("@fullname", SqlDbType.VarChar, 150).Direction = ParameterDirection.Output;
                 cmd.ExecuteNonQuery();
 
+                //al ejecutar los parametros de salida seran almacenados
                 sw = cmd.Parameters["@sw"].Value.ToString();
                 HttpContext.Session.SetString(sesion, cmd.Parameters["@fullname"].Value.ToString());
             }
@@ -40,6 +42,24 @@ namespace WebAppProyectoDSW.Controllers
 
             //envio un nuevo usuario
             return View(await Task.Run(() => new Empleado()));
+        }
+
+        [HttpPost]public async Task<IActionResult> Login(Empleado reg)
+        {
+            //Valido si los datos en el formulario son correctos
+            if (!ModelState.IsValid) return View(await Task.Run(() => reg));
+
+            //Si se ingresaron datos correctos
+            string sw = verifica(reg.correo, reg.clave);
+            if (sw == "0") // -> 0 = no existe empleado con esos datos
+            {
+                ModelState.AddModelError("", HttpContext.Session.GetString(sesion));
+                return View(await Task.Run(() => reg));
+            }
+            else // -> 1 = Datos correctos
+            {
+                return RedirectToAction("Login");
+            }
         }
 
         // Listado de productos PARA EL MENÚ
@@ -85,7 +105,7 @@ namespace WebAppProyectoDSW.Controllers
             */
             //envio la lista de productos
 
-            //ViewBag.empleado = HttpContext.Session.GetString(logSession);
+            //ViewBag.empleado = HttpContext.Session.GetString(sesion);
             return View(listadoProducto());
         }
 

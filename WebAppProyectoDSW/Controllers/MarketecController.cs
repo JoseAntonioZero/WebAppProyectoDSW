@@ -122,6 +122,8 @@ namespace WebAppProyectoDSW.Controllers
 
 
 
+
+        
         //REPORTE DE CLIENTES (listado por consulta)
 
 
@@ -147,12 +149,20 @@ namespace WebAppProyectoDSW.Controllers
         /* ---------------------------  LADY  ---------------------------*/
         //MANTENIMIENTO DE EMPLEADOS (formulario y listado)
 
+        //A
 
+
+
+        //B
+
+
+
+        //C
 
         //REPORTE DE EMPLEADOS
 
 
 
-
+        
     }
 }

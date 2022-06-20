@@ -111,10 +111,28 @@ namespace WebAppProyectoDSW.Controllers
         /* ---------------------------  JOSÉ  ---------------------------*/
         //REALIZAR PEDIDO (Al agregar pedido se actualiza el stock de productos)
 
-
+        /*
+         * dsfsdfsdfsd
+         * 
+         * 
+         * 
+         * 
+         * sdfdsafsdfdsf
+         */
 
         //REPORTE DE PEDIDOS
 
+        /*prueba jose2
+         * 
+         * sdafsdfsdfsdfsddsf
+         * 
+         * 
+         * 
+         * 
+         * dsfsaddsfsdf
+         * 
+         */
+        
 
 
         /* ---------------------------  ALAIN  ---------------------------*/

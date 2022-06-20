@@ -108,6 +108,50 @@ namespace WebAppProyectoDSW.Controllers
             ViewBag.usuario = HttpContext.Session.GetString(sesion);
             return View(listadoProducto());
         }
+        /* ---------------------------  JOSÉ  ---------------------------*/
+        //REALIZAR PEDIDO (Al agregar pedido se actualiza el stock de productos)
+
+
+
+        //REPORTE DE PEDIDOS
+
+
+
+        /* ---------------------------  ALAIN  ---------------------------*/
+        //MANTENIMIENTO DE CLIENTES (formulario y listado)
+
+
+
+        //REPORTE DE CLIENTES (listado por consulta)
+
+
+
+        /* ---------------------------  HILLARY  ---------------------------*/
+        //MANTENIMIENTO DE PRODUCTOS (formulario y listado)
+
+
+
+        //REPORTE DE PRODUCTOS (listado por consulta)
+
+
+
+        /* ---------------------------  JESÚS  ---------------------------*/
+        //MANTENIMIENTO DE PROVEEDORES (formulario y listado)
+
+
+
+        //REPORTE DE PROVEEDORES (listado por consulta)
+
+
+
+        /* ---------------------------  LADY  ---------------------------*/
+        //MANTENIMIENTO DE EMPLEADOS (formulario y listado)
+
+
+
+        //REPORTE DE EMPLEADOS
+
+
 
 
     }

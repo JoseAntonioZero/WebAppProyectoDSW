@@ -139,7 +139,15 @@ namespace WebAppProyectoDSW.Controllers
         //MANTENIMIENTO DE CLIENTES (formulario y listado)
 
 
-
+        /*alakings
+         * 
+         * 
+         * 
+         * 
+         * 
+         * 
+         * 
+         */
 
 
         //REPORTE DE CLIENTES (listado por consulta)

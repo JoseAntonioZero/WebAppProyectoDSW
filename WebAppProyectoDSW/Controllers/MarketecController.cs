@@ -10,6 +10,8 @@ namespace WebAppProyectoDSW.Controllers
 {
     public class MarketecController : Controller
     {
+
+
         string sesion = "";
 
         string verifica(string correo, string clave)
@@ -132,7 +134,7 @@ namespace WebAppProyectoDSW.Controllers
          * dsfsaddsfsdf
          * 
          */
-        
+
 
 
         /* ---------------------------  ALAIN  ---------------------------*/
@@ -151,7 +153,7 @@ namespace WebAppProyectoDSW.Controllers
 
 
 
-        
+
         //REPORTE DE CLIENTES (listado por consulta)
 
 
@@ -168,7 +170,27 @@ namespace WebAppProyectoDSW.Controllers
         /* ---------------------------  JESÚS  ---------------------------*/
         //MANTENIMIENTO DE PROVEEDORES (formulario y listado)
         //Jechu
-        //
+       IEnumerable<Pais> paises()
+        {
+            List<Pais> temporal = new List<Pais>();
+            using (SqlConnection cn = new conexion().getcn)
+            {
+                SqlCommand cmd = new SqlCommand("exec usp_paises",cn);
+                cn.Open();
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    temporal.Add(new Pais()
+                    {
+                        idPais = dr.GetInt32(0),
+                        nombrePais = dr.GetString(1)
+                        
+                    });
+                }
+            }
+            return temporal;
+        }
+
         //
         //
 

@@ -5,6 +5,7 @@ using Microsoft.Data.SqlClient;
 using Newtonsoft.Json;
 using WebAppProyectoDSW.Models;
 using WebAppProyectoDSW.Util;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace WebAppProyectoDSW.Controllers
 {
@@ -190,6 +191,47 @@ namespace WebAppProyectoDSW.Controllers
             }
             return temporal;
         }
+
+        public async Task<ActionResult> RegistrarProveedor()
+        {
+            ViewBag.paises = new SelectList(await Task.Run(() => paises()), "idpais", "nombrepais");
+            return View(new Proveedor());
+        }
+
+        [HttpPost]public async Task<IActionResult> RegistrarProveedor(Proveedor model)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.paises = new SelectList(await Task.Run(() => paises()), "idpais", "nombrepais",model.idPais);
+                return View(model);
+            }
+            string mensaje = "";
+            using (SqlConnection cn = new conexion().getcn)
+            {
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("usp_agregar_proveedor", cn);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@idProveedor", model.idProv);
+                    cmd.Parameters.AddWithValue("@nombre", model.nombreProv);
+                    cmd.Parameters.AddWithValue("@direccion ", model.direccion);
+                    cmd.Parameters.AddWithValue("@pais", model.idPais);
+                    cmd.Parameters.AddWithValue("@telefono ", model.telefono);
+                    cmd.Parameters.AddWithValue("@correo ", model.telefono);
+                    cn.Open();
+                    int c = cmd.ExecuteNonQuery();
+                    mensaje = $"Proveedor {c} agregado";
+
+
+                }
+                catch (Exception ex) { mensaje = ex.Message; }
+            }
+            ViewBag.mensaje = mensaje;
+            ViewBag.paises = new SelectList(await Task.Run(() => paises()), "idpais", "nombrepais", model.idPais);
+            return View(model);
+
+        }
+
 
         //
         //

@@ -257,9 +257,58 @@ namespace WebAppProyectoDSW.Controllers
         //C
 
         //REPORTE DE EMPLEADOS
+        IEnumerable<Empleado> listaEmpleadosXFechas(DateTime f1, DateTime f2)
+        {
+            
+            List<Empleado> temporal = new List<Empleado>();
+            using (SqlConnection cn = new conexion().getcn)
+            {
+
+                SqlCommand cmd = new SqlCommand("exec usp_listar_empleadosXfecha @f1, @f2", cn);
+                cmd.Parameters.AddWithValue("@f1", f1);
+                cmd.Parameters.AddWithValue("@f2", f2);
+                cn.Open();
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    temporal.Add(new Empleado()
+                    {
+                        idEmpleado = dr.GetInt32(0),
+                        apeEmpleado = dr.GetString(1),
+                        nomEmpleado = dr.GetString(2),
+                        fecNac = dr.GetDateTime(3),
+                        correo = dr.GetString(4),
+                        clave = dr.GetString(5)
+                    });
+                }
+                dr.Close(); cn.Close();
+            }
+            return temporal;
+        }
+
+        public async Task<IActionResult> consultaEmpleadosXFechas(/*int p = 0,*/ DateTime? f1 = null, DateTime? f2 = null)
+        {
 
 
+            DateTime x1 = (f1 == null ? DateTime.Today.AddDays(1) : (DateTime)f1);
+            DateTime x2 = (f2 == null ? DateTime.Today.AddDays(1) : (DateTime)f2);
 
-        
+            IEnumerable<Empleado> temporal = listaEmpleadosXFechas(x1, x2);
+            /*
+            int f = 10;
+            int c = temporal.Count();
+            int npags = c % f == 0 ? c / f : c / f + 1;
+            
+            ViewBag.npags = npags;
+            ViewBag.p = p;
+            ViewBag.f1 = f1;
+            ViewBag.f2 = f2;
+            */
+
+            //return View(await Task.Run(() => temporal.Skip(f * p).Take(f)));
+            return View(await Task.Run(() => temporal));
+        }
+
     }
 }

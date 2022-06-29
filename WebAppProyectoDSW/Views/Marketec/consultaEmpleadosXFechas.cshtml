@@ -1,0 +1,77 @@
+﻿@model IEnumerable<WebAppProyectoDSW.Models.Empleado>
+
+@{
+    ViewData["Title"] = "consultaEmpleadosXFechas";
+}
+
+<link rel="stylesheet" href="~/css/estilos.css" />
+
+
+@Html.Partial("_VistaParcial")
+
+<h4>Reporte de empleados</h4>
+
+<div class="contenedor">
+<br />
+<div  style="text-align: center;">
+    @using (Html.BeginForm())
+    {
+        <em>Desde:</em>
+        @Html.TextBox("f1", DateTime.Now.ToShortDateString(), new { type = "date", value =DateTime.Now.ToShortDateString() })
+        <em>Hasta:</em>
+        @Html.TextBox("f2", DateTime.Now.ToShortDateString(), new { Type = "date", value =DateTime.Now.ToShortDateString() })
+        <button class="btn btn-info">Consultar</button>
+    }
+</div>
+
+<br />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                ID
+            </th>
+            <th>
+                Apellidos
+            </th>
+            <th>
+                Nombres
+            </th>
+            <th>
+                Fecha de nacimiento
+            </th>
+            <th>
+                Correo
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.idEmpleado)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.apeEmpleado)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.nomEmpleado)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.fecNac)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.correo)
+            </td>
+            <td>
+                @Html.HiddenFor(modelItem => item.clave)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+</div>
+

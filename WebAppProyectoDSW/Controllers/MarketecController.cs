@@ -246,7 +246,104 @@ namespace WebAppProyectoDSW.Controllers
         /* ---------------------------  LADY  ---------------------------*/
         //MANTENIMIENTO DE EMPLEADOS (formulario y listado)
 
-        //A
+        public IEnumerable<Empleado> ListadoEmpleados()
+        {
+            List<Empleado> temporal = new List<Empleado>();
+            using (SqlConnection cn = new conexion().getcn)
+            {
+                SqlCommand cmd = new SqlCommand("exec usp_listar_empleados", cn);
+                cn.Open();
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    temporal.Add(new Empleado()
+                    {
+                        idEmpleado = dr.GetInt32(0),
+                        apeEmpleado = dr.GetString(1),
+                        nomEmpleado = dr.GetString(2),
+                        fecNac = dr.GetDateTime(3),
+                        fecCon = dr.GetDateTime(4),
+                        correo = dr.GetString(5)
+                    });
+                }
+            }
+            return temporal;
+        }
+
+        public async Task<IActionResult> ListarEmpleados()
+        {
+            IEnumerable<Empleado> temporal = ListadoEmpleados();
+            
+            return View(await Task.Run(() => temporal));
+        }
+
+        Empleado BuscarEmp(int id)
+        {
+            String codigo = id.ToString();
+
+            if (string.IsNullOrEmpty(codigo))
+                return new Empleado();
+            else
+                return ListadoEmpleados().FirstOrDefault(c => c.idEmpleado == id);
+
+        }
+
+        //Registro de empleados
+        public async Task<IActionResult> RegistrarEmpleado(int id)
+        {
+            Empleado emp = BuscarEmp(id);
+
+            return View(await Task.Run(() => emp));
+            
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RegistrarEmpleado(Empleado emp)
+        {
+            int c = 0;
+            string mensaje = "";
+            using (SqlConnection cn = new conexion().getcn)
+            {
+                cn.Open();
+                SqlTransaction tr = cn.BeginTransaction(IsolationLevel.Serializable);
+                try
+                {
+
+                    //Agrega empleado
+                    SqlCommand cmd = new SqlCommand("usp_agregar_empleado", cn, tr);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@apellido", emp.apeEmpleado);
+                    cmd.Parameters.AddWithValue("@nombre", emp.nomEmpleado);
+                    cmd.Parameters.AddWithValue("@fecnac", emp.fecNac);
+                    c = cmd.ExecuteNonQuery();
+
+
+                    if (c != 0 ) 
+                    //Crea un usuario con el empleado
+                    cmd = new SqlCommand("exec usp_agregar_usuario @correo, @clave", cn, tr);
+                    cmd.Parameters.AddWithValue("@correo", emp.correo);
+                    cmd.Parameters.AddWithValue("@clave", emp.clave);
+                    cmd.ExecuteNonQuery();
+                    
+                    //Si todo está ok
+                    tr.Commit();
+                    mensaje = "Se ha registrado con éxito";
+
+                }
+                catch (Exception ex)
+                {
+                    mensaje = ex.Message;
+                    tr.Rollback();
+                }
+                finally { cn.Close(); }
+
+            }
+
+            ViewBag.mensaje = mensaje;
+
+            return View(await Task.Run(() => emp));
+        }
 
 
 
@@ -278,8 +375,7 @@ namespace WebAppProyectoDSW.Controllers
                         apeEmpleado = dr.GetString(1),
                         nomEmpleado = dr.GetString(2),
                         fecNac = dr.GetDateTime(3),
-                        correo = dr.GetString(4),
-                        clave = dr.GetString(5)
+                        fecCon = dr.GetDateTime(4)
                     });
                 }
                 dr.Close(); cn.Close();

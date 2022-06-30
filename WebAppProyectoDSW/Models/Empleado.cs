@@ -8,7 +8,8 @@ namespace WebAppProyectoDSW.Models
         public string apeEmpleado { get; set; }
         public string nomEmpleado { get; set; }
         public DateTime fecNac { get; set; }
-        [Required, StringLength(20, MinimumLength = 3)] public string correo { get; set; }
-        [Required, StringLength(10, MinimumLength = 2)] public string clave { get; set; }
+        public DateTime fecCon { get; set; }
+        [Required, StringLength(40, MinimumLength = 3)] public string correo { get; set; }
+        [Required, MaxLength(10)] public string clave { get; set; }
     }
 }

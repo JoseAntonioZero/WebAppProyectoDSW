@@ -301,6 +301,8 @@ namespace WebAppProyectoDSW.Controllers
         [HttpPost]
         public async Task<IActionResult> RegistrarEmpleado(Empleado emp)
         {
+            
+
             int c = 0;
             string mensaje = "";
             using (SqlConnection cn = new conexion().getcn)
@@ -343,13 +345,130 @@ namespace WebAppProyectoDSW.Controllers
             ViewBag.mensaje = mensaje;
 
             return View(await Task.Run(() => emp));
+
         }
 
+        public async Task<IActionResult> ActualizarEmpleado(int id)
+        {
+            Empleado emp = BuscarEmp(id);
 
+            if (emp == null)
+            {
+                return RedirectToAction("ListarEmpleados");
+            }
+            else
+            {
+                return View(emp);
+            }
+            return View(await Task.Run(() => emp));
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ActualizarEmpleado(Empleado emp)
+        {
+
+            int c = 0;
+            string mensaje = "";
+            using (SqlConnection cn = new conexion().getcn)
+            {
+                cn.Open();
+                SqlTransaction tr = cn.BeginTransaction(IsolationLevel.Serializable);
+                try
+                {
+
+                    //Agrega empleado
+                    SqlCommand cmd = new SqlCommand("usp_actualizar_empleado", cn, tr);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@id", emp.idEmpleado);
+                    cmd.Parameters.AddWithValue("@apellido", emp.apeEmpleado);
+                    cmd.Parameters.AddWithValue("@nombre", emp.nomEmpleado);
+                    cmd.Parameters.AddWithValue("@fecnac", emp.fecNac);
+                    c = cmd.ExecuteNonQuery();
+
+                    if (c != 0)
+                        //Crea un usuario con el empleado
+                        cmd = new SqlCommand("exec usp_actualizar_usuario @id, @correo, @clave", cn, tr);
+                    cmd.Parameters.AddWithValue("@id", emp.idEmpleado);
+                    cmd.Parameters.AddWithValue("@correo", emp.correo);
+                    cmd.Parameters.AddWithValue("@clave", emp.clave);
+                    cmd.ExecuteNonQuery();
+
+                    //Si todo está ok
+                    tr.Commit();
+                    mensaje = "Se ha actualizado con éxito";
+
+                }
+                catch (Exception ex)
+                {
+                    mensaje = ex.Message;
+                    tr.Rollback();
+                }
+                finally { cn.Close(); }
+
+            }
+            ViewBag.mensaje = mensaje;
+
+            return View(await Task.Run(() => emp));
+        }
 
         //B
+        public async Task<IActionResult> EliminarEmpleado(int id)
+        {
+            Empleado emp = BuscarEmp(id);
+
+            if (emp == null)
+            {
+                return RedirectToAction("ListarEmpleados");
+            }
+            else
+            {
+                return View(await Task.Run(() => emp));
+            }
 
 
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EliminarEmpleado(Empleado emp)
+        {
+            int c = 0;
+            string mensaje = "";
+            using (SqlConnection cn = new conexion().getcn)
+            {
+                cn.Open();
+                SqlTransaction tr = cn.BeginTransaction(IsolationLevel.Serializable);
+                try
+                {
+                    //Agrega empleado
+                    SqlCommand cmd = new SqlCommand("exec usp_eliminar_usuario @idu", cn, tr);
+                    cmd.Parameters.AddWithValue("@idu", emp.idEmpleado);
+                    c = cmd.ExecuteNonQuery();
+
+                    if (c != 0)
+                    //Crea un usuario con el empleado
+                    cmd = new SqlCommand("exec usp_eliminar_empleado @ide", cn, tr);
+                    cmd.Parameters.AddWithValue("@ide", emp.idEmpleado);
+                    cmd.ExecuteNonQuery();
+
+
+                    //Si todo está ok
+                    tr.Commit();
+                    mensaje = "Se ha eliminado correctamente.";
+
+                }
+                catch (Exception ex)
+                {
+                    mensaje = ex.Message;
+                    tr.Rollback();
+                }
+                finally { cn.Close(); }
+
+            }
+            ViewBag.mensaje = mensaje;
+
+            return View(await Task.Run(() => emp));
+        }
 
         //C
 

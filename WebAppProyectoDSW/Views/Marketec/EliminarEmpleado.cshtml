@@ -1,0 +1,74 @@
+﻿@model WebAppProyectoDSW.Models.Empleado
+
+@{
+    ViewData["Title"] = "EliminarEmpleado";
+}
+
+<link rel="stylesheet" href="~/css/estilos.css" />
+
+
+@Html.Partial("_VistaParcial")
+
+<h4>Eliminar empleado</h4>
+
+<div class="contenedor">
+<br />
+<div>
+    <h3>Datos del empleado a eliminar:</h3>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-3">
+            Código:
+        </dt>
+        <dd class = "col-sm-9">
+            @Html.DisplayFor(model => model.idEmpleado)
+        </dd>
+        <dt class = "col-sm-3">
+            Apellidos: 
+        </dt>
+        <dd class = "col-sm-9">
+            @Html.DisplayFor(model => model.apeEmpleado)
+        </dd>
+        <dt class = "col-sm-3">
+            Nombres:
+        </dt>
+        <dd class = "col-sm-9">
+            @Html.DisplayFor(model => model.nomEmpleado)
+        </dd>
+        <dt class = "col-sm-3">
+            Fecha de nacimiento:
+        </dt>
+        <dd class = "col-sm-9">
+            @Html.DisplayFor(model => model.fecNac)
+        </dd>
+        <dt class = "col-sm-3">
+            Fecha de contrato:
+        </dt>
+        <dd class = "col-sm-9">
+            @Html.DisplayFor(model => model.fecCon)
+        </dd>
+        <dt class = "col-sm-3">
+            Correo electrónico:
+        </dt>
+        <dd class = "col-sm-9">
+            @Html.DisplayFor(model => model.correo)
+        </dd>
+        <!--
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.clave)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.clave)
+        </dd>
+        -->
+    </dl>
+    
+    <form asp-action="EliminarEmpleado">
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="ListarEmpleados">Back to List</a>
+    </form>
+
+    @ViewBag.mensaje
+</div>
+
+</div>

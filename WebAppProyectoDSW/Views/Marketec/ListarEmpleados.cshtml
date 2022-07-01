@@ -60,8 +60,10 @@
                 @Html.DisplayFor(modelItem => item.correo)
             </td>
             <td>
-               <a>@Html.ActionLink("", "EditarEmpleado", new { id=item.idEmpleado }) <img src="~/img/edit.png"> </a>
-               <a> @Html.ActionLink("", "EliminarEmpleado", new {  id=item.idEmpleado}) <img src="~/img/delete.png"></a>
+               
+               @Html.ActionLink("Actualizar", "ActualizarEmpleado", new {  id=item.idEmpleado}, new{@class="btn btn-info"})
+               @Html.ActionLink("Eliminar", "EliminarEmpleado", new {  id=item.idEmpleado}, new{@class="btn btn-danger"})
+               <!--<a> @Html.ActionLink("Eliminar", "ListarEmpleado", new {  id=item.idEmpleado}, new{@class="btn btn-danger"}) <img src="~/img/delete.png"></a>-->
             </td>
         </tr>
 }

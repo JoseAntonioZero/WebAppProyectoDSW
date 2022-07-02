@@ -849,21 +849,16 @@ namespace WebAppProyectoDSW.Controllers
                 SqlTransaction tr = cn.BeginTransaction(IsolationLevel.Serializable);
                 try
                 {
-                    //Agrega empleado
-                    SqlCommand cmd = new SqlCommand("exec usp_eliminar_usuario @idu", cn, tr);
-                    cmd.Parameters.AddWithValue("@idu", emp.idEmpleado);
-                    c = cmd.ExecuteNonQuery();
-
-                    if (c != 0)
-                    //Crea un usuario con el empleado
-                    cmd = new SqlCommand("exec usp_eliminar_empleado @ide", cn, tr);
+                    
+                    SqlCommand cmd = new SqlCommand("usp_eliminar_empleado", cn, tr);
+                    cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@ide", emp.idEmpleado);
-                    cmd.ExecuteNonQuery();
-
+                    c = cmd.ExecuteNonQuery();
 
                     //Si todo está ok
                     tr.Commit();
                     mensaje = "Se ha eliminado correctamente.";
+                    
 
                 }
                 catch (Exception ex)

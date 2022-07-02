@@ -16,12 +16,13 @@
 <div>
     <h3>Datos del empleado a eliminar:</h3>
     <hr />
+    <form asp-action="EliminarEmpleado">
     <dl class="row">
         <dt class = "col-sm-3">
             Código:
         </dt>
         <dd class = "col-sm-9">
-            @Html.DisplayFor(model => model.idEmpleado)
+            <input asp-for="idEmpleado" readonly="readonly"/>
         </dd>
         <dt class = "col-sm-3">
             Apellidos: 
@@ -63,7 +64,7 @@
         -->
     </dl>
     
-    <form asp-action="EliminarEmpleado">
+    
         <input type="submit" value="Delete" class="btn btn-danger" /> |
         <a asp-action="ListarEmpleados">Back to List</a>
     </form>

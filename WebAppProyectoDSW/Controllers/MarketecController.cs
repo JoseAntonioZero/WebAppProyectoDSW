@@ -373,8 +373,9 @@ namespace WebAppProyectoDSW.Controllers
 
         [HttpPost]
         public async Task<IActionResult> RegistrarCliente(Cliente cli)
-        {            
-            string mensaje = "";            
+        {
+            
+            string mensaje = "";
                 using (SqlConnection cn = new conexion().getcn)
                 {
                     cn.Open();
@@ -394,9 +395,9 @@ namespace WebAppProyectoDSW.Controllers
                         string ncliente = cmd.Parameters["@id"].Value.ToString();
 
                         tst.Commit();
-                        mensaje = $"Se ha registrado al cliente {ncliente} ";
+                        mensaje = $"Se ha registrado al cliente {ncliente} ";                        
 
-                    }
+                }
                     catch (Exception ex)
                     {
                         mensaje = ex.Message;
@@ -407,9 +408,8 @@ namespace WebAppProyectoDSW.Controllers
                 }
 
                 ViewBag.mensaje = mensaje;
-                   
-            return View(await Task.Run(() => cli));
 
+            return View(await Task.Run(() => cli));
         }
 
         public async Task<IActionResult> ActualizarCliente(String id)

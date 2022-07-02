@@ -1,0 +1,63 @@
+﻿@model IEnumerable<WebAppProyectoDSW.Models.Cliente>
+
+@{
+    ViewData["Title"] = "ListarClientes";
+}
+
+<link rel="stylesheet" href="~/css/estilos.css" />
+
+
+@Html.Partial("_VistaParcial")
+
+<h4>Lista de Clientes</h4>
+
+<div class="contenedor">
+<br />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.idCliente)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.nombreCliente)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.direccion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.idPais)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.telefono)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.idCliente)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.nombreCliente)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.direccion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.idPais)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.telefono)
+            </td>
+            <td>
+                @Html.ActionLink("Actualizar", "ActualizarCliente", new { id=item.idCliente }, new{@class="btn btn-info"})
+                @Html.ActionLink("Eliminar", "EliminarCliente", new { id=item.idCliente }, new{@class="btn btn-danger"})
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+</div>

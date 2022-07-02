@@ -14,6 +14,7 @@ namespace WebAppProyectoDSW.Controllers
 
 
         string sesion = "";
+        string sesioncod = "";
 
         string verifica(string correo, string clave)
         {
@@ -29,11 +30,13 @@ namespace WebAppProyectoDSW.Controllers
                 cmd.Parameters.AddWithValue("@clave", clave);
                 cmd.Parameters.Add("@sw", SqlDbType.VarChar, 1).Direction = ParameterDirection.Output;
                 cmd.Parameters.Add("@fullname", SqlDbType.VarChar, 150).Direction = ParameterDirection.Output;
+                cmd.Parameters.Add("@codigo", SqlDbType.VarChar, 1).Direction = ParameterDirection.Output;
                 cmd.ExecuteNonQuery();
 
                 //al ejecutar los parametros de salida seran almacenados
                 sw = cmd.Parameters["@sw"].Value.ToString();
                 HttpContext.Session.SetString(sesion, cmd.Parameters["@fullname"].Value.ToString());
+                HttpContext.Session.SetString(sesioncod, cmd.Parameters["@codigo"].Value.ToString());
             }
             return sw;
         }
@@ -42,7 +45,7 @@ namespace WebAppProyectoDSW.Controllers
         {
             //inicializar el Session 
             HttpContext.Session.SetString(sesion, "");
-
+            HttpContext.Session.SetString(sesioncod, "");
             //envio un nuevo usuario
             return View(await Task.Run(() => new Usuario()));
         }
@@ -287,6 +290,12 @@ namespace WebAppProyectoDSW.Controllers
             else
                 return ListadoEmpleados().FirstOrDefault(c => c.idEmpleado == id);
 
+        }
+
+        public IActionResult LoginRegistrarEmpleado(int id)
+        {
+            
+            return View();
         }
 
         //Registro de empleados

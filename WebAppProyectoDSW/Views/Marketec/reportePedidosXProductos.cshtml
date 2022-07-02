@@ -4,19 +4,25 @@
     ViewData["Title"] = "reportePedidosXProductos";
 }
 
-<h1>reportePedidosXProductos</h1>
+
 
 <link rel="stylesheet" href="~/css/estilos.css" />
 <link rel="stylesheet" href="~/css/parcial.css" />
 
 @Html.Partial("_VistaParcial")
+
+<h4>Reporte de Pedidos por Productos</h4>
 <div class="contenedor">
+    
     @using (Html.BeginForm())
     {
-        <em>Seleccione Producto:</em>
-        <td>@Html.DropDownList("id", (IEnumerable<SelectListItem>)ViewBag.productos, null, new { @class = "form-control" , @style = "width: 150px;" })</td>
-        <button>Consultar</button>
+            
+        <span>Seleccione Producto:</span>
+        <imput>@Html.DropDownList("id", (IEnumerable<SelectListItem>)ViewBag.productos, null, new { @class = "form-control" , @style = "width: 150px;" })</imput>
+        <button class="btn btn-info">Consultar</button>
+            
     }
+    
     <table class="table">
         <thead>
             <tr>

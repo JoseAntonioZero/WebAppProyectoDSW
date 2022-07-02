@@ -57,7 +57,12 @@
                 @Html.ActionLink("Eliminar", "EliminarCliente", new { id=item.idCliente }, new{@class="btn btn-danger"})
             </td>
         </tr>
-}
+}          
     </tbody>
+
 </table>
+
+            <div class="form-group">                
+                <a asp-action="RegistrarCliente" class="btn btn-primary">Registrar</a>
+            </div>
 </div>

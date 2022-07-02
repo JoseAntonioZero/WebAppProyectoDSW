@@ -16,6 +16,7 @@ namespace WebAppProyectoDSW.Models
         public string direccion { get; set; }
 
         [Display(Name = "Pais", Order = 3)]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Seleccione un pais para el Cliente")]
         public int idPais { get; set; }
 
         [Display(Name = "Teléfono", Order = 4)]

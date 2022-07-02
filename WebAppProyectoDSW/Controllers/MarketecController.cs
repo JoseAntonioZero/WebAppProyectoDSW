@@ -270,7 +270,7 @@ namespace WebAppProyectoDSW.Controllers
             ViewBag.msg = msg;
             return View();
         }
-        
+
         /*
          * dsfsdfsdfsd
          * 
@@ -282,16 +282,41 @@ namespace WebAppProyectoDSW.Controllers
 
         //REPORTE DE PEDIDOS
 
-        /*prueba jose2
-         * 
-         * sdafsdfsdfsdfsddsf
-         * 
-         * 
-         * 
-         * 
-         * dsfsaddsfsdf
-         * 
-         */
+        IEnumerable<Pedido> listarPedidosXProducto(int id)
+        {
+
+            List<Pedido> listPedido = new List<Pedido>();
+            using (SqlConnection cn = new conexion().getcn)
+            {
+
+                SqlCommand cmd = new SqlCommand("exec usp_listar_pedidosXproducto @id", cn);
+                cmd.Parameters.AddWithValue("@id", id);
+                cn.Open();
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    listPedido.Add(new Pedido()
+                    {
+                        idPedido = dr.GetString(0),
+                        idCliente = dr.GetString(1),
+                        idEmpleado = dr.GetInt32(2),
+                        fechaPedido = dr.GetDateTime(3),
+                        monto = dr.GetDecimal(4),
+                        nomProducto = dr.GetString(5),
+                        cantidad = dr.GetInt32(6)
+                    });
+                }
+                dr.Close(); cn.Close();
+            }
+            return listPedido;
+        }
+
+        public async Task<IActionResult> reportePedidosXProductos(int id = 0)
+        {   
+            IEnumerable<Pedido> reporte = listarPedidosXProducto(id);
+            return View(await Task.Run(() => reporte));
+        }
 
 
 

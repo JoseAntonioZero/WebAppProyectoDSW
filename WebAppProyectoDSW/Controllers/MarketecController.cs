@@ -193,6 +193,9 @@ namespace WebAppProyectoDSW.Controllers
             List<Carrito> auxiliar = JsonConvert.DeserializeObject<List<Carrito>>(
               HttpContext.Session.GetString("carrito"));
             //envio los registros del Session canasta
+
+            ViewBag.clientes = new SelectList(ListadoClientes(), "idCliente", "nombreCliente");
+            ViewBag.empleados = new SelectList(ListadoEmpleados(), "idEmpleado", "nomEmpleado");
             return View(auxiliar);
         }
 
@@ -255,8 +258,12 @@ namespace WebAppProyectoDSW.Controllers
                 }
                 finally { cn.Close(); }
             }
+
+            //Vacía carrito
+            HttpContext.Session.SetString("carrito", JsonConvert.SerializeObject(new List<Carrito>()));
             //al finalizar redirecciona hacia ventanas con el mensaje
             return RedirectToAction("Confirmacion", new { msg = mensaje });
+            
         }
 
         public IActionResult Confirmacion(string msg)
@@ -264,29 +271,7 @@ namespace WebAppProyectoDSW.Controllers
             ViewBag.msg = msg;
             return View();
         }
-
-        IEnumerable<Cliente> listadoClientes()
-        {
-            List<Cliente> temporal = new List<Cliente>();
-            using (SqlConnection cn = new conexion().getcn)
-            {
-                SqlCommand cmd = new SqlCommand("exec usp_listar_clientes", cn);
-                cn.Open();
-                SqlDataReader dr = cmd.ExecuteReader();
-                while (dr.Read())
-                {
-                    temporal.Add(new Cliente()
-                    {
-                        idCliente = dr.GetString(0),
-                        nombreCliente = dr.GetString(1),
-                        direccion = dr.GetString(2),
-                        idPais = dr.GetInt32(3),
-                        telefono = dr.GetString(4),
-                    });
-                }
-            }
-            return temporal;
-        }
+        
         /*
          * dsfsdfsdfsd
          * 

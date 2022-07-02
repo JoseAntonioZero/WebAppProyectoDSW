@@ -83,11 +83,11 @@
         <table style="margin:0 auto">
           <tr>
             <td>Cliente</td>
-            <td>@Html.TextBox("idcliente","")</td>
+            <td>@Html.DropDownList("idcliente", (IEnumerable<SelectListItem>)ViewBag.clientes, null, new { @class = "form-control" , @style = "width: 150px;" })</td>
           </tr>
           <tr>
             <td>Empleado</td>
-            <td>@Html.TextBox("idempleado","")</td>
+            <td>@Html.DropDownList("idempleado", (IEnumerable<SelectListItem>)ViewBag.empleados, null, new { @class = "form-control" , @style = "width: 150px;" })</td>
           </tr>
           <tr>
             <td><input type="submit" value="Procesar" class="btn btn-primary"></td>

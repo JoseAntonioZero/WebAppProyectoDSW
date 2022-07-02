@@ -1,0 +1,77 @@
+﻿@model WebAppProyectoDSW.Models.Producto
+
+@{
+    ViewData["Title"] = "Seleccionar";
+}
+
+
+<link rel="stylesheet" href="~/css/estilos.css" />
+<link rel="stylesheet" href="~/css/parcial.css" />
+
+
+@Html.Partial("_VistaParcial")
+
+<h1>Seleccionar</h1>
+<div class="contenedor">
+    <div>
+        <h4>Producto</h4>
+        <hr />
+        <dl class="row">
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.idProducto)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.idProducto)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.nombreProducto)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.nombreProducto)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.idProveedor)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.idProveedor)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.idCategoria)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.idCategoria)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.precioUnidad)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.precioUnidad)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.stock)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.stock)
+            </dd>
+        </dl>
+    </div>
+
+    <div>
+        <!--Formulario para agregar cantidad del producto-->
+        <form asp-action="Seleccionar" method="post">
+            @Html.Hidden("codigo",Model.idProducto)
+            <em>Ingrese la cantidad</em>
+            @Html.TextBox("cantidad",1,new{type="number",min=1,max=Model.stock})
+            <br />
+            <input type="submit" value="Agregar" class="btn btn-primary" />
+
+            <a asp-action="MenuPrincipal" class="btn btn-primary">Ir al Menú Principal</a>
+        </form>
+    </div>
+
+    <div>
+        <!--imprimir el mensaje-->
+        @ViewBag.mensaje
+    </div>
+
+ </div>

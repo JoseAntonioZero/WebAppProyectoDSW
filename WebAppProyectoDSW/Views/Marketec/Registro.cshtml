@@ -1,0 +1,99 @@
+﻿@model IEnumerable<WebAppProyectoDSW.Models.Carrito>
+
+@{
+    ViewData["Title"] = "Registro";
+}
+
+<link rel="stylesheet" href="~/css/estilos.css" />
+<link rel="stylesheet" href="~/css/parcial.css" />
+
+@Html.Partial("_VistaParcial")
+
+<h1>Registro</h1>
+<div class="contenedor">
+
+    <p>
+      <a asp-action="MenuPrincipal" class="btn btn-primary">Seguir Comprando</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.idProducto)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.nombreProducto)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.idProveedor)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.idCategoria)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.precioUnidad)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.stock)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.monto)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.idProducto)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nombreProducto)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.idProveedor)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.idCategoria)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.precioUnidad)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.stock)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.monto)
+                </td>            
+            </tr>        
+    }
+            <tr>
+                <td colspan="5">TOTAL: </td>
+                <td>@Model.Sum(x=>x.monto)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!--tabla para ingresar los datos del cliente-->
+
+    <div>
+      @using (Html.BeginForm())
+      {
+        <table style="margin:0 auto">
+          <tr>
+            <td>Cliente</td>
+            <td>@Html.DropDownList("idcliente", (IEnumerable<SelectListItem>)ViewBag.clientes, null, new { @class = "form-control" , @style = "width: 150px;" })</td>
+          </tr>
+          <tr>
+            <td>Empleado</td>
+            <td>@Html.DropDownList("idempleado", (IEnumerable<SelectListItem>)ViewBag.empleados, null, new { @class = "form-control" , @style = "width: 150px;" })</td>
+          </tr>
+          <tr>
+            <td><input type="submit" value="Procesar" class="btn btn-primary"></td>
+          </tr>
+        </table>
+      }
+
+    </div>
+ </div>

@@ -1,0 +1,87 @@
+﻿@model IEnumerable<WebAppProyectoDSW.Models.Carrito>
+
+@{
+    ViewData["Title"] = "Carrito";
+}
+
+
+
+<link rel="stylesheet" href="~/css/estilos.css" />
+<link rel="stylesheet" href="~/css/parcial.css" />
+
+
+@Html.Partial("_VistaParcial")
+
+<h1>Carrito</h1>
+<div class="contenedor">
+
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.idProducto)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.nombreProducto)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.idProveedor)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.idCategoria)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.precioUnidad)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.stock)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.monto)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.idProducto)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nombreProducto)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.idProveedor)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.idCategoria)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.precioUnidad)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.stock)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.monto)
+                </td>
+                <td>
+                    @Html.ActionLink("Delete", "Delete", new { id=item.idProducto })
+                </td>
+            </tr>
+    }
+    <tr>
+      <td colspan="5">TOTAL: </td>
+      <td>@Model.Sum(x=>x.monto)</td>
+    </tr>
+        </tbody>
+    </table>
+    
+    <p>
+    <a asp-action="MenuPrincipal" class="btn btn-primary">Seguir Comprando</a>
+    <a asp-action="Registro" class="btn btn-primary">Registrar Pedido</a>
+    </p>
+
+ </div>

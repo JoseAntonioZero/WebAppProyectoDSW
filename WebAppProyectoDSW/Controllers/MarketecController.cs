@@ -101,14 +101,14 @@ namespace WebAppProyectoDSW.Controllers
 
         public IActionResult MenuPrincipal()
         {
-            /*
+            
             //evaluo, si no existe Session carrito, definirlo como una lista de Pedido vacio
             if (HttpContext.Session.GetString("carrito") == null)
             {
                 HttpContext.Session.SetString("carrito",
                     JsonConvert.SerializeObject(new List<Carrito>()));
             }
-            */
+            
             //envio la lista de productos
 
             ViewBag.usuario = HttpContext.Session.GetString(sesion);
@@ -117,6 +117,160 @@ namespace WebAppProyectoDSW.Controllers
         /* ---------------------------  JOSÉ  ---------------------------*/
         //REALIZAR PEDIDO (Al agregar pedido se actualiza el stock de productos)
 
+        public IActionResult Seleccionar(int id = 0)
+        {
+            //buscar el producto por idproducto
+            Producto reg = Buscar(id);
+            if (reg == null)
+            {
+                return RedirectToAction("MenuPrincipal");
+            }
+            else
+            {
+                return View(reg);
+            }
+        }
+
+        [HttpPost]public IActionResult Seleccionar(int codigo, int cantidad)
+        {
+            //buscar el producto por su idproducto
+            Producto reg = Buscar(codigo);
+            //en un Registro almaceno los datos
+            Carrito item = new Carrito() { 
+                idProducto=reg.idProducto,
+                nombreProducto=reg.nombreProducto,
+                idProveedor=reg.idProveedor,
+                idCategoria=reg.idCategoria,
+                precioUnidad=reg.precioUnidad,
+                stock=cantidad,
+            };
+
+            //para almacenarlo en Session "carrito" debo deserializar
+            List<Carrito> auxiliar = JsonConvert.DeserializeObject<List<Carrito>>(
+                HttpContext.Session.GetString("carrito"));
+
+            auxiliar.Add(item);
+
+            //volver a serializar auxiliar almacenando en el Session
+            HttpContext.Session.SetString("carrito", JsonConvert.SerializeObject(auxiliar));
+
+            ViewBag.mensaje = "Producto Agregado";
+            return View(reg); //envias a reg (su clase es de tipo Producto
+        }
+
+        public IActionResult Carrito()
+        {
+            //deserializar el Sesion "carrito"
+            List<Carrito> auxiliar = JsonConvert.DeserializeObject<List<Carrito>>(
+                HttpContext.Session.GetString("carrito"));
+
+            //si auxiliar esta vacio, regresar al Portal
+            if (auxiliar.Count == 0)
+                return RedirectToAction("MenuPrincipal");
+            else
+                return View(auxiliar);
+        }
+
+        public IActionResult Delete(int id)
+        {
+            //1.deserializar el Sesion Canasta
+            List<Carrito> auxiliar = JsonConvert.DeserializeObject<List<Carrito>>(
+              HttpContext.Session.GetString("carrito"));
+
+            //2.buscar el registro por su codigo
+            Carrito reg = auxiliar.FirstOrDefault(x => x.idProducto == id);
+            //3.eliminar
+            auxiliar.Remove(reg);
+            //4.volver a serializar
+            HttpContext.Session.SetString("carrito", JsonConvert.SerializeObject(auxiliar));
+            //ir a la vista Canasta
+            return RedirectToAction("carrito");
+        }
+
+        public IActionResult Registro()
+        {
+            //deserializar el Sesion Canasta
+            List<Carrito> auxiliar = JsonConvert.DeserializeObject<List<Carrito>>(
+              HttpContext.Session.GetString("carrito"));
+            //envio los registros del Session canasta
+
+            ViewBag.clientes = new SelectList(ListadoClientes(), "idCliente", "nombreCliente");
+            ViewBag.empleados = new SelectList(ListadoEmpleados(), "idEmpleado", "nomEmpleado");
+            return View(auxiliar);
+        }
+
+        [HttpPost]
+        public IActionResult Registro(string idcliente, string idempleado)
+        {
+            string mensaje = "";
+            using (SqlConnection cn = new conexion().getcn)
+            {
+                //lista de Session
+                List<Carrito> auxiliar = JsonConvert.DeserializeObject<List<Carrito>>(
+                  HttpContext.Session.GetString("carrito"));
+                //abrir la conexion para definir la transaccion
+                cn.Open();
+                SqlTransaction tr = cn.BeginTransaction(IsolationLevel.Serializable);
+                try
+                {
+                    //ejecutando el procedure de tb_pedidos
+                    SqlCommand cmd = new SqlCommand("usp_agregar_pedidos", cn, tr);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@idpedido", SqlDbType.VarChar, 5).Direction = ParameterDirection.Output;
+                    cmd.Parameters.AddWithValue("@idCliente", idcliente);
+                    cmd.Parameters.AddWithValue("@idEmpleado", idempleado);
+                    cmd.Parameters.AddWithValue("@monto", auxiliar.Sum(x => x.monto));
+                    cmd.ExecuteNonQuery();
+
+                    //despues de ejecutar recupero el valor de @npedido output
+                    string idpedido = cmd.Parameters["@idpedido"].Value.ToString();
+
+                    //almacenando el detalle, leer cada registro del auxiliar y ejecuto el procedure
+                    auxiliar.ForEach(reg =>
+                    {
+                        cmd = new SqlCommand("exec usp_agregar_detallepedido @idpedido, @idProducto, @precio,@cantidad", cn, tr);
+                        cmd.Parameters.AddWithValue("@idpedido", idpedido);
+                        cmd.Parameters.AddWithValue("@idproducto", reg.idProducto);
+                        cmd.Parameters.AddWithValue("@precio", reg.precioUnidad);
+                        cmd.Parameters.AddWithValue("@cantidad", reg.stock);
+                        cmd.ExecuteNonQuery();
+                    });
+
+                    //actualizar el stock
+                    auxiliar.ForEach(reg =>
+                    {
+                        cmd = new SqlCommand("exec usp_actualizar_stock @idproducto, @cantidad", cn, tr);
+                        cmd.Parameters.AddWithValue("@idproducto", reg.idProducto);
+                        cmd.Parameters.AddWithValue("@cantidad", (Int16)reg.stock); //lo envio como smallint
+                        cmd.ExecuteNonQuery();
+                    });
+
+                    //si todo esta OK
+                    tr.Commit();
+                    mensaje = $"Se ha registrado el pedido {idpedido}";
+                }
+
+                catch (Exception ex)
+                {
+                    mensaje = ex.Message;
+                    tr.Rollback(); //en caso de error deshacer las operaciones
+                }
+                finally { cn.Close(); }
+            }
+
+            //Vacía carrito
+            HttpContext.Session.SetString("carrito", JsonConvert.SerializeObject(new List<Carrito>()));
+            //al finalizar redirecciona hacia ventanas con el mensaje
+            return RedirectToAction("Confirmacion", new { msg = mensaje });
+            
+        }
+
+        public IActionResult Confirmacion(string msg)
+        {
+            ViewBag.msg = msg;
+            return View();
+        }
+        
         /*
          * dsfsdfsdfsd
          * 

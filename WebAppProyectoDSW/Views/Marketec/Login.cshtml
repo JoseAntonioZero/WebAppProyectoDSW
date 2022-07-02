@@ -22,6 +22,7 @@
                 <input asp-for="clave" class="form-control" />
                 <span asp-validation-for="clave" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <a asp-action="Login" class="btn btn-primary">Limpiar</a>
                 <input type="submit" value="Ingreso" class="btn btn-primary" />
@@ -30,9 +31,6 @@
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

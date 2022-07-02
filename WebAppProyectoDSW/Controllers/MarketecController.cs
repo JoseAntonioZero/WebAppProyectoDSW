@@ -138,19 +138,275 @@ namespace WebAppProyectoDSW.Controllers
 
 
 
-        /* ---------------------------  ALAIN  ---------------------------*/
+        /* ---------------------------  ALAIN  -----------------------------------------------------------*/
         //MANTENIMIENTO DE CLIENTES (formulario y listado)
 
+        public IEnumerable<Cliente> ListadoClientes()
+        {
+            List<Cliente> listaCli = new List<Cliente>();
+            using (SqlConnection cn = new conexion().getcn)
+            {
+                SqlCommand cmd = new SqlCommand("exec usp_listar_clientes", cn);
+                cn.Open();
+                SqlDataReader dr = cmd.ExecuteReader();
 
-        /*alakings
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
-         */
+                while (dr.Read())
+                {
+                    listaCli.Add(new Cliente()
+                    {
+                        idCliente = dr.GetString(0),
+                        nombreCliente = dr.GetString(1),
+                        direccion = dr.GetString(2),
+                        idPais = dr.GetInt32(3),
+                        telefono = dr.GetString(4)                        
+                    });
+                }
+            }
+            return listaCli;
+        }
+
+        //CONSULTAR CLIENTES
+        public async Task<IActionResult> ListarClientes()
+        {
+            IEnumerable<Cliente> lstCli = ListadoClientes();
+
+            return View(await Task.Run(() => lstCli));
+        }
+
+        //BUSCAR CLIENTE
+        Cliente BuscarCliente(String id)
+        {
+            //String codigo = id.ToString();
+
+            if (string.IsNullOrEmpty(id))
+                return new Cliente();
+            else
+                return ListadoClientes().FirstOrDefault(c => c.idCliente == id);
+
+        }
+
+        //Listar Paises Clientes
+        IEnumerable<Pais> ListarPaises()
+        {
+            List<Pais> listPaises = new List<Pais>();
+            using (SqlConnection cn = new conexion().getcn)
+            {
+                SqlCommand cmd = new SqlCommand("exec usp_listar_paises", cn);
+                cn.Open();
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    listPaises.Add(new Pais()
+                    {
+                        idPais = dr.GetInt32(0),
+                        nombrePais = dr.GetString(1)
+
+                    });
+                }
+            }
+            return listPaises;
+        }
+
+        //REGISTRAR CLIENTE
+        public async Task<IActionResult> RegistrarCliente()
+        {            
+            ViewBag.paises = new SelectList(ListarPaises(), "idPais", "nombrePais");
+            return View(new Cliente());
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RegistrarCliente(Cliente cli)
+        {            
+            string mensaje = "";
+            using (SqlConnection cn = new conexion().getcn)
+            {
+                cn.Open();
+                SqlTransaction tst = cn.BeginTransaction(IsolationLevel.Serializable);
+                try
+                {
+                    
+                    SqlCommand cmd = new SqlCommand("usp_agregar_cliente", cn, tst);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@id", SqlDbType.VarChar,5).Direction = ParameterDirection.Output;
+                    cmd.Parameters.AddWithValue("@nombre", cli.nombreCliente);
+                    cmd.Parameters.AddWithValue("@direccion", cli.direccion);
+                    cmd.Parameters.AddWithValue("@pais", cli.idPais);
+                    cmd.Parameters.AddWithValue("@telefono", cli.telefono);
+                    cmd.ExecuteNonQuery();
+
+                    string ncliente = cmd.Parameters["@id"].Value.ToString();
+                    
+                    
+                    tst.Commit();
+                    mensaje = $"Se ha registrado al cliente {ncliente} ";
+
+                }
+                catch (Exception ex)
+                {
+                    mensaje = ex.Message;
+                    tst.Rollback();
+                }
+                finally { cn.Close(); }
+
+            }
+
+            ViewBag.mensaje = mensaje;
+
+            return View(await Task.Run(() => cli));
+
+        }
+
+        public async Task<IActionResult> ActualizarCliente(String id)
+        {
+            Cliente cli = BuscarCliente(id);
+
+            if (cli == null)
+            {
+                return RedirectToAction("ListarClientes");
+            }
+            else
+            {
+                return View(cli);
+            }
+            return View(await Task.Run(() => cli));
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ActualizarCliente(Cliente cli)
+        {            
+            string mensaje = "";
+            using (SqlConnection cn = new conexion().getcn)
+            {
+                cn.Open();
+                SqlTransaction tst = cn.BeginTransaction(IsolationLevel.Serializable);
+                try
+                {
+                                        
+                    SqlCommand cmd = new SqlCommand("usp_actualizar_cliente", cn, tst);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@id", cli.idCliente);
+                    cmd.Parameters.AddWithValue("@nombre", cli.nombreCliente);
+                    cmd.Parameters.AddWithValue("@direccion", cli.direccion);
+                    cmd.Parameters.AddWithValue("@pais", cli.idPais);
+                    cmd.Parameters.AddWithValue("@telefono", cli.telefono);
+                    cmd.ExecuteNonQuery();
+                                        
+                    tst.Commit();
+                    mensaje = "Se ha actualizado el cliente con éxito";
+
+                }
+                catch (Exception ex)
+                {
+                    mensaje = ex.Message;
+                    tst.Rollback();
+                }
+                finally { cn.Close(); }
+
+            }
+            ViewBag.mensaje = mensaje;
+
+            return View(await Task.Run(() => cli));
+        }
+
+        
+        public async Task<IActionResult> EliminarCliente(String id)
+        {
+            Cliente cli = BuscarCliente(id);
+
+            if (cli == null)
+            {
+                return RedirectToAction("ListarClientes");
+            }
+            else
+            {
+                return View(await Task.Run(() => cli));
+            }
+
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EliminarCliente(Cliente cli)
+        {            
+            string mensaje = "";
+            using (SqlConnection cn = new conexion().getcn)
+            {
+                cn.Open();
+                SqlTransaction tst = cn.BeginTransaction(IsolationLevel.Serializable);
+                try
+                {
+                    
+                    SqlCommand cmd = new SqlCommand("exec usp_eliminar_cliente @id", cn, tst);
+                    cmd.Parameters.AddWithValue("@id", cli.idCliente);
+                    cmd.ExecuteNonQuery();
+                    
+                    //Si todo está ok
+                    tst.Commit();
+                    mensaje = "Se ha eliminado al cliente correctamente.";
+
+                }
+                catch (Exception ex)
+                {
+                    mensaje = ex.Message;
+                    tst.Rollback();
+                }
+                finally { cn.Close(); }
+
+            }
+            ViewBag.mensaje = mensaje;
+
+            return View(await Task.Run(() => cli));
+        }
+
+        
+        //REPORTES
+        IEnumerable<Cliente> listarClientesXNombre(String nombre)
+        {
+
+            List<Cliente> listCliente = new List<Cliente>();
+            using (SqlConnection cn = new conexion().getcn)
+            {
+
+                SqlCommand cmd = new SqlCommand("exec usp_listar_clientesXnombre @nombre", cn);
+                cmd.Parameters.AddWithValue("@nombre", nombre);                
+                cn.Open();
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    listCliente.Add(new Cliente()
+                    {
+                        idCliente = dr.GetString(0),
+                        nombreCliente = dr.GetString(1),
+                        direccion = dr.GetString(2),
+                        idPais = dr.GetInt32(3),
+                        telefono = dr.GetString(4)
+                    });
+                }
+                dr.Close(); cn.Close();
+            }
+            return listCliente;
+        }
+
+        public async Task<IActionResult> ReporteClientesXNombre(String nombre = null)
+        {                        
+            IEnumerable<Cliente> temporal = listarClientesXNombre(nombre);
+            /*
+            int f = 10;
+            int c = temporal.Count();
+            int npags = c % f == 0 ? c / f : c / f + 1;
+            
+            ViewBag.npags = npags;
+            ViewBag.p = p;
+            ViewBag.f1 = f1;
+            ViewBag.f2 = f2;
+            */
+
+            //return View(await Task.Run(() => temporal.Skip(f * p).Take(f)));
+            return View(await Task.Run(() => temporal));
+        }
 
 
 
@@ -171,7 +427,7 @@ namespace WebAppProyectoDSW.Controllers
         /* ---------------------------  JESÚS  ---------------------------*/
         //MANTENIMIENTO DE PROVEEDORES (formulario y listado)
         //Jechu
-       IEnumerable<Pais> paises()
+        IEnumerable<Pais> paises()
         {
             List<Pais> temporal = new List<Pais>();
             using (SqlConnection cn = new conexion().getcn)

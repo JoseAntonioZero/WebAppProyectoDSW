@@ -736,7 +736,7 @@ namespace WebAppProyectoDSW.Controllers
                 }
                 catch (Exception ex)
                 {
-                    mensaje = ex.Message;
+                    mensaje = "Ya existe empleado con este correo.";
                     tr.Rollback();
                 }
                 finally { cn.Close(); }

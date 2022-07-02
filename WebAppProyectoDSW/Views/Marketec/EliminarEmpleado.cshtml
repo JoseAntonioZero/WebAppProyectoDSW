@@ -10,7 +10,7 @@
 @Html.Partial("_VistaParcial")
 
 <h4>Eliminar empleado</h4>
-
+<div class="mensaje">@ViewBag.mensaje</div>
 <div class="contenedor">
 <br />
 <div>
@@ -65,11 +65,10 @@
     </dl>
     
     
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="ListarEmpleados">Back to List</a>
+        <input type="submit" value="Eliminar" class="btn btn-danger" /> 
+        <a asp-action="ListarEmpleados" class="btn btn-info">Listado</a>
     </form>
 
-    @ViewBag.mensaje
 </div>
 
 </div>

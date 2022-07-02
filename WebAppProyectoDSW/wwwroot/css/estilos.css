@@ -15,29 +15,28 @@
 }
 
 .registro {
-    border: 3px solid black;
+    border: 2px solid black;
     border-radius: 7px;
     min-height: 300px; /*300*/
     height: auto;
     margin: 1%;
-    padding: 20px;
-    background-color: #2BC6D4;
+    padding: 20px 20px 10px 20px;
+    background-color: white;
     display: block;
 }
 
 .textreg {
-    width: 40%;
-    float: left;
-    margin-left: 20px;
     font-size: 20px;
     color: black;
-    font-family: "Arial";
-    letter-spacing:2px;
+    font-family: "Verdana";
+    letter-spacing: 2px;
+    text-align: center;
+    background-color: lightgrey;
+    border-radius: 7px;
+    padding: 3px;
 }
 
 .imgreg {
-    width: 40%;
-    float: right;
     text-align: center;
 }
 
@@ -60,6 +59,15 @@ h1 {
 h2 {
     text-align: center;
 
+}
+
+.mensaje {
+    background-color: rgb(72, 0, 255,0.4);
+    padding: 5px 0px;
+    color: black;
+    margin-bottom: 10px;
+    text-align: center;
+    font-weight: bold;
 }
 
 h4 {

@@ -11,7 +11,7 @@
 @Html.Partial("_VistaParcial")
 
 <h4>Mantenimiento de Empleados</h4>
-
+<div class="mensaje">@ViewBag.mensaje</div>
 <div class="contenedor">
 <br />
 <div class="row">
@@ -57,9 +57,7 @@
     </div>
 </div>
 
-<div>
-    @ViewBag.mensaje
-</div>
+
 </div>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

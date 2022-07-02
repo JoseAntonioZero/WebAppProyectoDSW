@@ -694,10 +694,59 @@ namespace WebAppProyectoDSW.Controllers
 
         }
 
-        public IActionResult LoginRegistrarEmpleado(int id)
+        public async Task<IActionResult> LoginRegistrarEmpleado(int id)
         {
-            
-            return View();
+            Empleado emp = BuscarEmp(id);
+
+            return View(await Task.Run(() => emp));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LoginRegistrarEmpleado(Empleado emp)
+        {
+            int c = 0;
+            string mensaje = "";
+            using (SqlConnection cn = new conexion().getcn)
+            {
+                cn.Open();
+                SqlTransaction tr = cn.BeginTransaction(IsolationLevel.Serializable);
+                try
+                {
+
+                    //Agrega empleado
+                    SqlCommand cmd = new SqlCommand("usp_agregar_empleado", cn, tr);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@apellido", emp.apeEmpleado);
+                    cmd.Parameters.AddWithValue("@nombre", emp.nomEmpleado);
+                    cmd.Parameters.AddWithValue("@fecnac", emp.fecNac);
+                    c = cmd.ExecuteNonQuery();
+
+
+                    if (c != 0)
+                        //Crea un usuario con el empleado
+                        cmd = new SqlCommand("exec usp_agregar_usuario @correo, @clave", cn, tr);
+                    cmd.Parameters.AddWithValue("@correo", emp.correo);
+                    cmd.Parameters.AddWithValue("@clave", emp.clave);
+                    cmd.ExecuteNonQuery();
+
+                    //Si todo está ok
+                    tr.Commit();
+                    mensaje = "Se ha registrado con éxito";
+
+                }
+                catch (Exception ex)
+                {
+                    mensaje = ex.Message;
+                    tr.Rollback();
+                }
+                finally { cn.Close(); }
+
+            }
+
+            ViewBag.mensaje = mensaje;
+
+            return View(await Task.Run(() => emp));
+
         }
 
         //Registro de empleados

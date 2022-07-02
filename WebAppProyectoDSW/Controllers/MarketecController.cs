@@ -215,47 +215,45 @@ namespace WebAppProyectoDSW.Controllers
         {            
             ViewBag.paises = new SelectList(ListarPaises(), "idPais", "nombrePais");
             return View(new Cliente());
-
         }
 
         [HttpPost]
         public async Task<IActionResult> RegistrarCliente(Cliente cli)
         {            
-            string mensaje = "";
-            using (SqlConnection cn = new conexion().getcn)
-            {
-                cn.Open();
-                SqlTransaction tst = cn.BeginTransaction(IsolationLevel.Serializable);
-                try
+            string mensaje = "";            
+                using (SqlConnection cn = new conexion().getcn)
                 {
-                    
-                    SqlCommand cmd = new SqlCommand("usp_agregar_cliente", cn, tst);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add("@id", SqlDbType.VarChar,5).Direction = ParameterDirection.Output;
-                    cmd.Parameters.AddWithValue("@nombre", cli.nombreCliente);
-                    cmd.Parameters.AddWithValue("@direccion", cli.direccion);
-                    cmd.Parameters.AddWithValue("@pais", cli.idPais);
-                    cmd.Parameters.AddWithValue("@telefono", cli.telefono);
-                    cmd.ExecuteNonQuery();
+                    cn.Open();
+                    SqlTransaction tst = cn.BeginTransaction(IsolationLevel.Serializable);
+                    try
+                    {
 
-                    string ncliente = cmd.Parameters["@id"].Value.ToString();
-                    
-                    
-                    tst.Commit();
-                    mensaje = $"Se ha registrado al cliente {ncliente} ";
+                        SqlCommand cmd = new SqlCommand("usp_agregar_cliente", cn, tst);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@id", SqlDbType.VarChar, 5).Direction = ParameterDirection.Output;
+                        cmd.Parameters.AddWithValue("@nombre", cli.nombreCliente);
+                        cmd.Parameters.AddWithValue("@direccion", cli.direccion);
+                        cmd.Parameters.AddWithValue("@pais", cli.idPais);
+                        cmd.Parameters.AddWithValue("@telefono", cli.telefono);
+                        cmd.ExecuteNonQuery();
+
+                        string ncliente = cmd.Parameters["@id"].Value.ToString();
+
+                        tst.Commit();
+                        mensaje = $"Se ha registrado al cliente {ncliente} ";
+
+                    }
+                    catch (Exception ex)
+                    {
+                        mensaje = ex.Message;
+                        tst.Rollback();
+                    }
+                    finally { cn.Close(); }
 
                 }
-                catch (Exception ex)
-                {
-                    mensaje = ex.Message;
-                    tst.Rollback();
-                }
-                finally { cn.Close(); }
 
-            }
-
-            ViewBag.mensaje = mensaje;
-
+                ViewBag.mensaje = mensaje;
+                   
             return View(await Task.Run(() => cli));
 
         }
@@ -265,11 +263,12 @@ namespace WebAppProyectoDSW.Controllers
             Cliente cli = BuscarCliente(id);
 
             if (cli == null)
-            {
+            {                
                 return RedirectToAction("ListarClientes");
             }
             else
             {
+                ViewBag.paises = new SelectList(ListarPaises(), "idPais", "nombrePais");
                 return View(cli);
             }
             return View(await Task.Run(() => cli));
@@ -297,7 +296,7 @@ namespace WebAppProyectoDSW.Controllers
                     cmd.ExecuteNonQuery();
                                         
                     tst.Commit();
-                    mensaje = "Se ha actualizado el cliente con éxito";
+                    mensaje = $"Se ha actualizado el cliente con éxito";
 
                 }
                 catch (Exception ex)

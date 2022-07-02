@@ -1,20 +1,25 @@
 ﻿@model WebAppProyectoDSW.Models.Cliente
 
 @{
-    ViewData["Title"] = "RegistrarCliente";
+    ViewData["Title"] = "ActualizarCliente";
 }
 
 <link rel="stylesheet" href="~/css/estilos.css" />
 @Html.Partial("_VistaParcial")
 
-<h4>Mantenimiento de Cliente</h4>
+<h4>Actualizar Datos de Cliente</h4>
 
 <div class="contenedor">
 <br />
 <div class="row">
-    <div class="col-md-9">
-        <form asp-action="RegistrarCliente">                        
+    <div class="col-md-4">
+        <form asp-action="ActualizarCliente">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="idCliente" class="control-label"></label>
+                <input asp-for="idCliente" class="form-control" readonly="readonly"/>
+                <span asp-validation-for="idCliente" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="nombreCliente" class="control-label"></label>
                 <input asp-for="nombreCliente" class="form-control" />
@@ -26,10 +31,9 @@
                 <span asp-validation-for="direccion" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="idPais" class="control-label"></label>
-                <select asp-for="idPais" class="form-control" asp-items="ViewBag.paises">
-                    
-                </select>              
+                <label asp-for="idPais" class="control-label"></label>                
+                <select asp-for="idPais" class="form-control" asp-items="ViewBag.paises">                    
+                </select>
                 <span asp-validation-for="idPais" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -39,18 +43,19 @@
             </div>
             <br />
             <div class="form-group">
-                <input type="submit" value="Registrar" class="btn btn-primary" />
+                <input type="submit" value="Actualizar" class="btn btn-primary" />
                 <a asp-action="ListarClientes" class="btn btn-info">Listado</a>
-                <a asp-action="RegistrarCliente" class="btn btn-danger">Limpiar</a>
             </div>
         </form>
     </div>
 </div>
 
-    <div>
-        @ViewBag.mensaje
-    </div>
-
-
+<div>
+    @ViewBag.mensaje
+</div>
 </div>
 
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

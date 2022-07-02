@@ -323,6 +323,7 @@ namespace WebAppProyectoDSW.Controllers
             }
             else
             {
+                ViewBag.paises = new SelectList(ListarPaises(), "idPais", "nombrePais");
                 return View(await Task.Run(() => cli));
             }
 
@@ -341,6 +342,7 @@ namespace WebAppProyectoDSW.Controllers
                 {
                     
                     SqlCommand cmd = new SqlCommand("exec usp_eliminar_cliente @id", cn, tst);
+                    //cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@id", cli.idCliente);
                     cmd.ExecuteNonQuery();
                     

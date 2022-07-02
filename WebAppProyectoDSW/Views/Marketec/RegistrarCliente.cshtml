@@ -8,7 +8,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" ></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js" ></script>
     
-@if(ViewBag.mensaje != null)
+
+
+
+@Html.Partial("_VistaParcial")
+
+<h4>Mantenimiento de Cliente</h4>
+
+<div class="contenedor">
+    @if(ViewBag.mensaje != null)
 {
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
         <strong>@ViewBag.mensaje</strong>
@@ -17,13 +25,6 @@
         </span>
     </div>    
 }
-
-
-@Html.Partial("_VistaParcial")
-
-<h4>Mantenimiento de Cliente</h4>
-
-<div class="contenedor">
 <br />
 <div class="row">
     <div class="col-md-9">

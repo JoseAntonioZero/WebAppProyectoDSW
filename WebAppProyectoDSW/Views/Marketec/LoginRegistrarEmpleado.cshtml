@@ -11,6 +11,7 @@
         <h2>Ingrese sus datos</h2>
         <hr />
         <div class="row">
+            <div>@ViewBag.mensaje</div>
             <form asp-action="RegistrarEmpleado">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
@@ -40,15 +41,16 @@
                 </div>
                 <br />
                 <div class="form-group" style="text-align:center;">
-                    <input type="submit" value="Registrar" class="btn btn-dark btn-lg" />
+                    <input asp-action="LoginRegistrarEmpleado" type="submit" value="Registrar" class="btn btn-dark btn-lg" />
                 </div>
             </form>
         </div>
     </div>
+    <div>
+        <p class="plog">¿Ya tiene una cuenta? <a asp-action="Login">Ingrese.</a></p>
+    </div>
 </div>
-<div>
-    <p class="plog">¿Ya tiene una cuenta? <a asp-action="Login">Ingrese.</a></p>
-</div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

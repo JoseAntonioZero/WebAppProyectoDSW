@@ -513,7 +513,8 @@ namespace WebAppProyectoDSW.Controllers
                         nomEmpleado = dr.GetString(2),
                         fecNac = dr.GetDateTime(3),
                         fecCon = dr.GetDateTime(4),
-                        correo = dr.GetString(5)
+                        correo = dr.GetString(5),
+                        clave = dr.GetString(6)
                     });
                 }
             }

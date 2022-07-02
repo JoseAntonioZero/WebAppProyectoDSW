@@ -315,6 +315,8 @@ namespace WebAppProyectoDSW.Controllers
         public async Task<IActionResult> reportePedidosXProductos(int id = 0)
         {   
             IEnumerable<Pedido> reporte = listarPedidosXProducto(id);
+            ViewBag.productos = new SelectList(listadoProducto(), "idProducto", "nombreProducto");
+
             return View(await Task.Run(() => reporte));
         }
 

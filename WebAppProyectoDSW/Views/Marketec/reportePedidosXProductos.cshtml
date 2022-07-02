@@ -6,78 +6,84 @@
 
 <h1>reportePedidosXProductos</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.idPedido)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.idCliente)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.idEmpleado)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.idProducto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.fechaPedido)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.precioUnidad)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.cantidad)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.monto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.nomProducto)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.idPedido)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.idCliente)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.idEmpleado)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.idProducto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.fechaPedido)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.precioUnidad)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.cantidad)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.monto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.nomProducto)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<link rel="stylesheet" href="~/css/estilos.css" />
+<link rel="stylesheet" href="~/css/parcial.css" />
+
+@Html.Partial("_VistaParcial")
+<div class="contenedor">
+    @using (Html.BeginForm())
+    {
+        <em>Seleccione Producto:</em>
+        <td>@Html.DropDownList("id", (IEnumerable<SelectListItem>)ViewBag.productos, null, new { @class = "form-control" , @style = "width: 150px;" })</td>
+        <button>Consultar</button>
+    }
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.idPedido)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.idCliente)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.idEmpleado)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.idProducto)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.fechaPedido)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.precioUnidad)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.cantidad)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.monto)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.nomProducto)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.idPedido)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.idCliente)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.idEmpleado)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.idProducto)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fechaPedido)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.precioUnidad)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.cantidad)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.monto)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nomProducto)
+                </td>
+                <td>
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>
+</div>

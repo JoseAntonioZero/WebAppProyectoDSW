@@ -422,7 +422,7 @@ namespace WebAppProyectoDSW.Controllers
                         string ncliente = cmd.Parameters["@id"].Value.ToString();
 
                         tst.Commit();
-                        mensaje = $"Se ha registrado al cliente {ncliente} ";                        
+                        mensaje = $"Cliente: '{cli.nombreCliente}' se registró como {ncliente} ";                        
 
                 }
                     catch (Exception ex)
@@ -477,12 +477,12 @@ namespace WebAppProyectoDSW.Controllers
                     cmd.ExecuteNonQuery();
                                         
                     tst.Commit();
-                    mensaje = $"Se ha actualizado el cliente con éxito";
+                    mensaje = $"Se ha actualizado los datos del Cliente '{cli.nombreCliente}'";
 
                 }
                 catch (Exception ex)
                 {
-                    mensaje = ex.Message;
+                    mensaje = $"No se pudo Actualizar los datos del Cliente '{cli.nombreCliente}'";
                     tst.Rollback();
                 }
                 finally { cn.Close(); }
@@ -529,7 +529,7 @@ namespace WebAppProyectoDSW.Controllers
                     
                     //Si todo está ok
                     tst.Commit();
-                    mensaje = "Se ha eliminado al cliente correctamente.";
+                    mensaje = $"Se ha eliminado al Cliente '{cli.nombreCliente}'";
 
                 }
                 catch (Exception ex)
@@ -549,7 +549,6 @@ namespace WebAppProyectoDSW.Controllers
         //REPORTES
         IEnumerable<Cliente> listarClientesXNombre(String nombre)
         {
-
             List<Cliente> listCliente = new List<Cliente>();
             using (SqlConnection cn = new conexion().getcn)
             {
@@ -571,6 +570,11 @@ namespace WebAppProyectoDSW.Controllers
                     });
                 }
                 dr.Close(); cn.Close();
+
+                if(listCliente.Count==0)
+                {
+                    ViewBag.mensaje = $"Cliente '{nombre}' no encontrado";
+                }
             }
             return listCliente;
         }
@@ -579,7 +583,9 @@ namespace WebAppProyectoDSW.Controllers
         {
             String nombreBuscar = (nombre == null ? "" : nombre);
             ViewBag.nombreCli = nombre;
-            IEnumerable<Cliente> reporte = listarClientesXNombre(nombreBuscar);            
+            
+            IEnumerable<Cliente> reporte = listarClientesXNombre(nombreBuscar);                     
+
             return View(await Task.Run(() => reporte));
         }
 

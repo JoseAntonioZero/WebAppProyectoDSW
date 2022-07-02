@@ -35,6 +35,10 @@
             <th>
                 Correo
             </th>
+            <!--
+            <th>
+                Clave
+            </th>-->
             <th></th>
         </tr>
     </thead>
@@ -59,6 +63,10 @@
             <td>
                 @Html.DisplayFor(modelItem => item.correo)
             </td>
+            <!--
+            <td>
+                @Html.DisplayFor(modelItem => item.clave)
+            </td>-->
             <td>
                
                @Html.ActionLink("Actualizar", "ActualizarEmpleado", new {  id=item.idEmpleado}, new{@class="btn btn-info"})

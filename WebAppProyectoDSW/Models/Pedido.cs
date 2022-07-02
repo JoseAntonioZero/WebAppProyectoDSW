@@ -10,5 +10,7 @@
         public decimal precioUnidad { get; set; }
         public int cantidad { get; set; }
         public decimal monto { get; set; }
+
+        public string nomProducto { get; set; }
     }
 }

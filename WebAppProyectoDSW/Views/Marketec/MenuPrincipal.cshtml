@@ -17,16 +17,6 @@
     
     @foreach (var item in Model) {
             <div class="registro"> 
-
-                <div class="textreg">
-                    <p> <strong> Código: </strong> @Html.DisplayFor(modelItem => item.idProducto)</p>
-                    <p> <strong>Nombre: </strong> @Html.DisplayFor(modelItem => item.nombreProducto)</p>
-                    <!-- <p> <strong>Proveedor: </strong> @Html.HiddenFor(modelItem => item.idProveedor)</p>-->
-                    <!-- <p> <strong>Categoría: </strong> @Html.HiddenFor(modelItem => item.idCategoria)</p>-->
-                    <p> <strong>Precio: </strong> @Html.DisplayFor(modelItem => item.precioUnidad)</p>
-                    <p> <strong>Unidades: </strong> @Html.DisplayFor(modelItem => item.stock)</p>
-                </div>
-
                 <div class="imgreg">
                     <img src="@Url.Content($"~/img/{item.idProducto}.jpg")"> <!--convertir la direccion relativa en absoluta-->
                     <br />
@@ -35,6 +25,17 @@
                         @Html.ActionLink("Agregar al carrito", "Seleccionar", new { id=item.idProducto}, new {@class="btn btn-dark btn-lg"}) 
                     
                 </div>
+                <hr>
+                <div class="textreg">
+                    <!--<p> <strong> Código: </strong> @Html.DisplayFor(modelItem => item.idProducto)</p>-->
+                    <p> <!--<strong>Nombre: </strong>--> @Html.DisplayFor(modelItem => item.nombreProducto)</p>
+                    <!-- <p> <strong>Proveedor: </strong> @Html.HiddenFor(modelItem => item.idProveedor)</p>-->
+                    <!-- <p> <strong>Categoría: </strong> @Html.HiddenFor(modelItem => item.idCategoria)</p>-->
+                    <strong><p> <!--<strong>Precio: </strong>--> S/.  @Html.DisplayFor(modelItem => item.precioUnidad)</p></strong>
+                    <p> <strong>Unidades: </strong> @Html.DisplayFor(modelItem => item.stock)</p>
+                </div>
+
+                
 
             </div>
     }

@@ -203,8 +203,7 @@ namespace WebAppProyectoDSW.Controllers
         public IActionResult Registro(string idcliente, string idempleado)
         {
             string mensaje = "";
-            using (SqlConnection cn = new SqlConnection(@"server = DESKTOP-8S275VH;database = Marketec2022;Trusted_Connection = True;" +
-            "MultipleActiveResultSets = True;TrustServerCertificate = False;Encrypt = False"))
+            using (SqlConnection cn = new conexion().getcn)
             {
                 //lista de Session
                 List<Carrito> auxiliar = JsonConvert.DeserializeObject<List<Carrito>>(

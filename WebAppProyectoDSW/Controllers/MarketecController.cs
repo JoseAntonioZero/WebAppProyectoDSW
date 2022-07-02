@@ -36,7 +36,7 @@ namespace WebAppProyectoDSW.Controllers
                 //al ejecutar los parametros de salida seran almacenados
                 sw = cmd.Parameters["@sw"].Value.ToString();
                 HttpContext.Session.SetString(sesion, cmd.Parameters["@fullname"].Value.ToString());
-                HttpContext.Session.SetString(sesioncod, cmd.Parameters["@codigo"].Value.ToString());
+                //HttpContext.Session.SetString(sesioncod, cmd.Parameters["@codigo"].Value.ToString());
             }
             return sw;
         }
@@ -45,7 +45,7 @@ namespace WebAppProyectoDSW.Controllers
         {
             //inicializar el Session 
             HttpContext.Session.SetString(sesion, "");
-            HttpContext.Session.SetString(sesioncod, "");
+            //HttpContext.Session.SetString(sesioncod, "");
             //envio un nuevo usuario
             return View(await Task.Run(() => new Usuario()));
         }

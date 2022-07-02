@@ -12,7 +12,8 @@
 <h4>Lista de Clientes</h4>
 
 <div class="contenedor">
-<br />
+    
+    <br />
 <table class="table">
     <thead>
         <tr>
@@ -53,7 +54,7 @@
                 @Html.DisplayFor(modelItem => item.telefono)
             </td>
             <td>
-                @Html.ActionLink("Actualizar", "ActualizarCliente", new { id=item.idCliente }, new{@class="btn btn-info"})
+                @Html.ActionLink("Actualizar", "ActualizarCliente", new { id=item.idCliente }, new{@class="btn btn-warning"})
                 @Html.ActionLink("Eliminar", "EliminarCliente", new { id=item.idCliente }, new{@class="btn btn-danger"})
             </td>
         </tr>
@@ -66,3 +67,8 @@
                 <a asp-action="RegistrarCliente" class="btn btn-primary">Registrar</a>
             </div>
 </div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

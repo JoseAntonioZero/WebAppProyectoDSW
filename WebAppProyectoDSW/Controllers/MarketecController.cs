@@ -36,7 +36,7 @@ namespace WebAppProyectoDSW.Controllers
                 //al ejecutar los parametros de salida seran almacenados
                 sw = cmd.Parameters["@sw"].Value.ToString();
                 HttpContext.Session.SetString(sesion, cmd.Parameters["@fullname"].Value.ToString());
-                HttpContext.Session.SetString(sesioncod, cmd.Parameters["@codigo"].Value.ToString());
+                //HttpContext.Session.SetString(sesioncod, cmd.Parameters["@codigo"].Value.ToString());
             }
             return sw;
         }
@@ -45,7 +45,7 @@ namespace WebAppProyectoDSW.Controllers
         {
             //inicializar el Session 
             HttpContext.Session.SetString(sesion, "");
-            HttpContext.Session.SetString(sesioncod, "");
+            //HttpContext.Session.SetString(sesioncod, "");
             //envio un nuevo usuario
             return View(await Task.Run(() => new Usuario()));
         }
@@ -548,22 +548,12 @@ namespace WebAppProyectoDSW.Controllers
             return listCliente;
         }
 
-        public async Task<IActionResult> ReporteClientesXNombre(String nombre = null)
-        {                        
-            IEnumerable<Cliente> temporal = listarClientesXNombre(nombre);
-            /*
-            int f = 10;
-            int c = temporal.Count();
-            int npags = c % f == 0 ? c / f : c / f + 1;
-            
-            ViewBag.npags = npags;
-            ViewBag.p = p;
-            ViewBag.f1 = f1;
-            ViewBag.f2 = f2;
-            */
-
-            //return View(await Task.Run(() => temporal.Skip(f * p).Take(f)));
-            return View(await Task.Run(() => temporal));
+        public async Task<IActionResult> ReporteClientesXNombre(String? nombre = "")
+        {
+            String nombreBuscar = (nombre == null ? "" : nombre);
+            ViewBag.nombreCli = nombre;
+            IEnumerable<Cliente> reporte = listarClientesXNombre(nombreBuscar);            
+            return View(await Task.Run(() => reporte));
         }
 
 
@@ -678,7 +668,8 @@ namespace WebAppProyectoDSW.Controllers
                         nomEmpleado = dr.GetString(2),
                         fecNac = dr.GetDateTime(3),
                         fecCon = dr.GetDateTime(4),
-                        correo = dr.GetString(5)
+                        correo = dr.GetString(5),
+                        clave = dr.GetString(6)
                     });
                 }
             }

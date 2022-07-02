@@ -5,19 +5,34 @@
 }
 
 <link rel="stylesheet" href="~/css/estilos.css" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" ></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js" ></script>
+    
+
+
 @Html.Partial("_VistaParcial")
 
 <h4>Reporte de Clientes</h4>
 
 
 <div class="contenedor">
-<br />
+    @if(ViewBag.mensaje != null)
+{
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>@ViewBag.mensaje</strong>
+        <span id="close" type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>    
+}
+
 <div  style="text-align: center;">
     @using (Html.BeginForm())
     {
         <span>Ingrese el Nombre del Cliente</span>
         <input type="text" name="nombre" value="@ViewBag.nombreCli"/>
-        <button class="btn btn-info">Mostrar</button>
+        <button type="submit" class="btn btn-info">Mostrar</button>
     }
 </div>
 

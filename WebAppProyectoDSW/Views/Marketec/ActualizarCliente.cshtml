@@ -5,11 +5,27 @@
 }
 
 <link rel="stylesheet" href="~/css/estilos.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" ></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js" ></script>
+    
+
+
+
+
 @Html.Partial("_VistaParcial")
 
 <h4>Actualizar Datos del Cliente</h4>
 
 <div class="contenedor">
+    @if(ViewBag.mensaje != null)
+{
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>@ViewBag.mensaje</strong>
+        <span id="close" type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </span>
+    </div>    
+}
 <br />
 <div class="row">
     <div class="col-md-4">
@@ -50,9 +66,6 @@
     </div>
 </div>
 
-<div>
-    @ViewBag.mensaje
-</div>
 </div>
 
 

@@ -393,22 +393,12 @@ namespace WebAppProyectoDSW.Controllers
             return listCliente;
         }
 
-        public async Task<IActionResult> ReporteClientesXNombre(String nombre = null)
-        {                        
-            IEnumerable<Cliente> temporal = listarClientesXNombre(nombre);
-            /*
-            int f = 10;
-            int c = temporal.Count();
-            int npags = c % f == 0 ? c / f : c / f + 1;
-            
-            ViewBag.npags = npags;
-            ViewBag.p = p;
-            ViewBag.f1 = f1;
-            ViewBag.f2 = f2;
-            */
-
-            //return View(await Task.Run(() => temporal.Skip(f * p).Take(f)));
-            return View(await Task.Run(() => temporal));
+        public async Task<IActionResult> ReporteClientesXNombre(String? nombre = "")
+        {
+            String nombreBuscar = (nombre == null ? "" : nombre);
+            ViewBag.nombreCli = nombre;
+            IEnumerable<Cliente> reporte = listarClientesXNombre(nombreBuscar);            
+            return View(await Task.Run(() => reporte));
         }
 
 
